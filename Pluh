@@ -33,7 +33,7 @@ if game.PlaceId == 3101667897 then
             if not success then
                 warn("Error while auto farming Blue Orb in City:", err)
             end
-            wait(1)  -- Adjust the delay as needed
+            wait(0.000000001)  -- Ultra-fast delay
         end
     end
 
