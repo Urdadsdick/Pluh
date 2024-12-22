@@ -4,21 +4,50 @@ if game.PlaceId == 3101667897 then
 
     -- Create Window
     local Window = OrionLib:MakeWindow({
-        Name = "Goated Hub - Auto Tab",
+        Name = "Goated Hub - Auto Features",
         HidePremium = false,
         SaveConfig = true,
         ConfigFolder = "GoatedHub"
     })
 
-    -- Add an "Auto" tab
+    -- Services
+    local replicatedStorage = game:GetService("ReplicatedStorage")
+
+    -- Add Auto Tab
     local autoTab = Window:MakeTab({
         Name = "Auto",
         Icon = "rbxassetid://4483345998",
         PremiumOnly = false
     })
 
-    -- You can add features to the Auto tab here, for example:
-    -- autoTab:AddToggle({ Name = "Example Feature", Default = false, Callback = function(state) print(state) end })
+    -- Variable to control Auto Farm
+    local autoFarmEnabled = false
+
+    -- Function to start auto farming
+    local function startAutoFarm()
+        while autoFarmEnabled do
+            local success, err = pcall(function()
+                -- Fire the orb event to collect orbs
+                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", "City")
+            end)
+            if not success then
+                warn("Error while auto farming:", err)
+            end
+            wait(1)  -- Adjust the delay as needed
+        end
+    end
+
+    -- Add Auto Farm Toggle
+    autoTab:AddToggle({
+        Name = "Auto Farm",
+        Default = false,
+        Callback = function(state)
+            autoFarmEnabled = state
+            if autoFarmEnabled then
+                spawn(startAutoFarm)  -- Start the auto farming loop
+            end
+        end
+    })
 
     -- Initialize the Orion UI
     OrionLib:Init()
