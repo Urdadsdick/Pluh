@@ -23,7 +23,7 @@ if game.PlaceId == 3101667897 then
     -- Variable to control Auto Farm
     local autoFarmEnabled = false
 
-    -- Function to start auto farming
+    -- Function to start auto farming (collect orb)
     local function startAutoFarm()
         while autoFarmEnabled do
             local success, err = pcall(function()
