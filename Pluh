@@ -20,31 +20,60 @@ if game.PlaceId == 3101667897 then
         PremiumOnly = false
     })
 
-    -- Variable to control Auto Farm
-    local autoFarmEnabled = false
+    -- Variable to control Auto Farm for Yellow Orb
+    local autoFarmYellowEnabled = false
 
-    -- Function to start auto farming (collect orb)
-    local function startAutoFarm()
-        while autoFarmEnabled do
+    -- Variable to control Auto Farm for Gem
+    local autoFarmGemEnabled = false
+
+    -- Function to start auto farming (collect Yellow Orb)
+    local function startAutoFarmYellow()
+        while autoFarmYellowEnabled do
             local success, err = pcall(function()
                 -- Fire the orb event to collect the Yellow Orb in the City
                 replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "City")
             end)
             if not success then
-                warn("Error while auto farming:", err)
+                warn("Error while auto farming Yellow Orb:", err)
             end
             wait(1)  -- Adjust the delay as needed
         end
     end
 
-    -- Add Auto Farm Toggle
+    -- Function to start auto farming (collect Gem)
+    local function startAutoFarmGem()
+        while autoFarmGemEnabled do
+            local success, err = pcall(function()
+                -- Fire the orb event to collect the Gem in the City
+                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Gem", "City")
+            end)
+            if not success then
+                warn("Error while auto farming Gem:", err)
+            end
+            wait(1)  -- Adjust the delay as needed
+        end
+    end
+
+    -- Add Auto Farm Toggle for Yellow Orb
     autoTab:AddToggle({
-        Name = "Auto Farm",
+        Name = "Auto Farm Yellow Orb",
         Default = false,
         Callback = function(state)
-            autoFarmEnabled = state
-            if autoFarmEnabled then
-                spawn(startAutoFarm)  -- Start the auto farming loop
+            autoFarmYellowEnabled = state
+            if autoFarmYellowEnabled then
+                spawn(startAutoFarmYellow)  -- Start the auto farming loop for Yellow Orb
+            end
+        end
+    })
+
+    -- Add Auto Farm Toggle for Gem Orb
+    autoTab:AddToggle({
+        Name = "Auto Farm Gem",
+        Default = false,
+        Callback = function(state)
+            autoFarmGemEnabled = state
+            if autoFarmGemEnabled then
+                spawn(startAutoFarmGem)  -- Start the auto farming loop for Gem
             end
         end
     })
