@@ -27,8 +27,8 @@ if game.PlaceId == 3101667897 then
     local function startAutoFarm()
         while autoFarmEnabled do
             local success, err = pcall(function()
-                -- Fire the orb event to collect orbs
-                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", "City")
+                -- Fire the orb event to collect the Yellow Orb in the City
+                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "City")
             end)
             if not success then
                 warn("Error while auto farming:", err)
