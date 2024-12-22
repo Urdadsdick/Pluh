@@ -20,21 +20,21 @@ if game.PlaceId == 3101667897 then
         PremiumOnly = false
     })
 
-    -- Variable to control Auto Farm for Yellow Orb
-    local autoFarmYellowEnabled = false
+    -- Variable to control Auto Farm for Red Orb
+    local autoFarmRedEnabled = false
 
     -- Variable to control Auto Farm for Gem
     local autoFarmGemEnabled = false
 
-    -- Function to start auto farming (collect Yellow Orb)
-    local function startAutoFarmYellow()
-        while autoFarmYellowEnabled do
+    -- Function to start auto farming (collect Red Orb)
+    local function startAutoFarmRed()
+        while autoFarmRedEnabled do
             local success, err = pcall(function()
-                -- Fire the orb event to collect the Yellow Orb in the City
-                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", "City")
+                -- Fire the orb event to collect the Red Orb in the City
+                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "City")
             end)
             if not success then
-                warn("Error while auto farming Yellow Orb:", err)
+                warn("Error while auto farming Red Orb:", err)
             end
             wait(1)  -- Adjust the delay as needed
         end
@@ -54,14 +54,14 @@ if game.PlaceId == 3101667897 then
         end
     end
 
-    -- Add Auto Farm Toggle for Yellow Orb
+    -- Add Auto Farm Toggle for Red Orb
     autoTab:AddToggle({
-        Name = "Auto Farm Yellow Orb",
+        Name = "Auto Farm Red Orb",
         Default = false,
         Callback = function(state)
-            autoFarmYellowEnabled = state
-            if autoFarmYellowEnabled then
-                spawn(startAutoFarmYellow)  -- Start the auto farming loop for Yellow Orb
+            autoFarmRedEnabled = state
+            if autoFarmRedEnabled then
+                spawn(startAutoFarmRed)  -- Start the auto farming loop for Red Orb
             end
         end
     })
