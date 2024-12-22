@@ -22,6 +22,7 @@ if game.PlaceId == 3101667897 then
 
     -- Variable to control Auto Farm for Blue Orb in City
     local autoFarmBlueOrbEnabled = false
+    local autoRebirthEnabled = false
 
     -- Function to start auto farming (collect Blue Orb in City)
     local function startAutoFarmBlueOrb()
@@ -33,7 +34,21 @@ if game.PlaceId == 3101667897 then
             if not success then
                 warn("Error while auto farming Blue Orb in City:", err)
             end
-            wait(0.000000001)  -- Ultra-fast delay
+            wait(0.000000000000000000001)  -- Extremely low wait time
+        end
+    end
+
+    -- Function to start auto rebirth
+    local function startAutoRebirth()
+        while autoRebirthEnabled do
+            local success, err = pcall(function()
+                -- Fire the rebirth event
+                replicatedStorage.rEvents.rebirthEvent:FireServer("rebirthRequest")
+            end)
+            if not success then
+                warn("Error while auto rebirthing:", err)
+            end
+            wait(1)  -- Adjust the delay as needed
         end
     end
 
@@ -45,6 +60,18 @@ if game.PlaceId == 3101667897 then
             autoFarmBlueOrbEnabled = state
             if autoFarmBlueOrbEnabled then
                 spawn(startAutoFarmBlueOrb)  -- Start the auto farming loop for Blue Orb in City
+            end
+        end
+    })
+
+    -- Add Auto Rebirth Toggle
+    autoTab:AddToggle({
+        Name = "Auto Rebirth",
+        Default = false,
+        Callback = function(state)
+            autoRebirthEnabled = state
+            if autoRebirthEnabled then
+                spawn(startAutoRebirth)  -- Start the auto rebirth loop
             end
         end
     })
