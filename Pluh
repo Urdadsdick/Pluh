@@ -24,8 +24,6 @@ if game.PlaceId == 3101667897 then
     local autoFarmBlueOrbEnabled = false
     -- Variable to control Auto Rebirth
     local autoRebirthEnabled = false
-    -- Variable to control Auto Loop
-    local autoLoopEnabled = false
 
     -- Function to start auto farming Blue Orb in City
     local function startAutoFarmBlueOrb()
@@ -36,7 +34,7 @@ if game.PlaceId == 3101667897 then
             if not success then
                 warn("Error while auto farming Blue Orb in City:", err)
             end
-            wait(1)  -- Wait time for Auto Farm Blue Orb
+            wait(0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001)  -- Extremely low wait time as per your request
         end
     end
 
@@ -50,19 +48,6 @@ if game.PlaceId == 3101667897 then
                 warn("Error while auto rebirthing:", err)
             end
             wait(1)  -- Wait time for Auto Rebirth
-        end
-    end
-
-    -- Function to start the Auto Loop
-    local function startAutoLoop()
-        while autoLoopEnabled do
-            local success, err = pcall(function()
-                replicatedStorage.theHuntBadgeEvent:FireServer()
-            end)
-            if not success then
-                warn("Error while running Auto Loop:", err)
-            end
-            wait(0.000000000000000000000000000000000000000000000000000000000000000000000000000001)  -- Extremely low wait time
         end
     end
 
@@ -86,18 +71,6 @@ if game.PlaceId == 3101667897 then
             autoRebirthEnabled = state
             if autoRebirthEnabled then
                 spawn(startAutoRebirth)  -- Start the Auto Rebirth loop
-            end
-        end
-    })
-
-    -- Add Auto Loop Toggle for theHuntBadgeEvent
-    autoTab:AddToggle({
-        Name = "Auto Loop (theHuntBadgeEvent)",
-        Default = false,
-        Callback = function(state)
-            autoLoopEnabled = state
-            if autoLoopEnabled then
-                spawn(startAutoLoop)  -- Start the Auto Loop
             end
         end
     })
