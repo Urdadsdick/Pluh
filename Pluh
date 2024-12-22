@@ -20,31 +20,31 @@ if game.PlaceId == 3101667897 then
         PremiumOnly = false
     })
 
-    -- Variable to control Auto Farm for Gem in Magma City
-    local autoFarmGemEnabled = false
+    -- Variable to control Auto Farm for Blue Orb in City
+    local autoFarmBlueOrbEnabled = false
 
-    -- Function to start auto farming (collect Gem in Magma City)
-    local function startAutoFarmGem()
-        while autoFarmGemEnabled do
+    -- Function to start auto farming (collect Blue Orb in City)
+    local function startAutoFarmBlueOrb()
+        while autoFarmBlueOrbEnabled do
             local success, err = pcall(function()
-                -- Fire the orb event to collect the Gem in Magma City
-                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Gem", "Magma City")
+                -- Fire the orb event to collect the Blue Orb in City
+                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", "City")
             end)
             if not success then
-                warn("Error while auto farming Gem in Magma City:", err)
+                warn("Error while auto farming Blue Orb in City:", err)
             end
             wait(1)  -- Adjust the delay as needed
         end
     end
 
-    -- Add Auto Farm Toggle for Gem in Magma City
+    -- Add Auto Farm Toggle for Blue Orb in City
     autoTab:AddToggle({
-        Name = "Auto Farm Gem (Magma City)",
+        Name = "Auto Farm Blue Orb (City)",
         Default = false,
         Callback = function(state)
-            autoFarmGemEnabled = state
-            if autoFarmGemEnabled then
-                spawn(startAutoFarmGem)  -- Start the auto farming loop for Gem in Magma City
+            autoFarmBlueOrbEnabled = state
+            if autoFarmBlueOrbEnabled then
+                spawn(startAutoFarmBlueOrb)  -- Start the auto farming loop for Blue Orb in City
             end
         end
     })
