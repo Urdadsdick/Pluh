@@ -1,239 +1,27 @@
-if game.PlaceId == 11177482306 then
-    -- Load OrionLib for the GUI
+if game.PlaceId == 3101667897 then
+    -- Load Orion Library
     local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+    -- Create Window
     local Window = OrionLib:MakeWindow({
-        Name = "Cayos Hub for Street Wars 2",
+        Name = "Goated Hub - Auto Tab",
         HidePremium = false,
         SaveConfig = true,
-        ConfigFolder = "OrionTest"
+        ConfigFolder = "GoatedHub"
     })
 
-    -- Initialize Global Values for toggles
-    _G.killall = false
-    _G.godmode = false
-    _G.autoPickup = false
-    _G.onePunch = false
-    _G.mopAutoFarm = false
-    _G.teleportToSpawn = false
-
-    -- Function to enable KillAll (fires the Tap event continuously)
-    function killAll()
-        while _G.killall do
-            game:GetService("ReplicatedStorage").Remotes.Tap:FireServer()
-            wait(0.0001)  -- Prevents script from overwhelming the server
-        end
-    end
-
-    -- Function to enable God Mode (keeps player's health at max)
-    function enableGodMode()
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-
-        -- Ensure the player has a Humanoid to check health
-        if character and character:FindFirstChild("Humanoid") then
-            character.Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-                if _G.godmode and character.Humanoid.Health < character.Humanoid.MaxHealth then
-                    -- Set health back to max if it falls below the max value
-                    character.Humanoid.Health = character.Humanoid.MaxHealth
-                end
-            end)
-        end
-    end
-
-    -- Function to enable Auto Pickup
-    function enableAutoPickup()
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-
-        -- Continuously check for nearby items
-        while _G.autoPickup do
-            -- Loop through all items in the workspace (or wherever they are dropped)
-            for _, item in pairs(workspace:GetChildren()) do
-                if item:IsA("Tool") and item.Parent ~= character then
-                    local distance = (item.Position - character.HumanoidRootPart.Position).Magnitude
-                    if distance < 10 then  -- Adjust the distance as necessary
-                        item.Parent = character  -- Pickup the item
-                    end
-                end
-            end
-            wait(0.5)  -- Delay to avoid performance issues
-        end
-    end
-
-    -- Function for One Punch kill
-    function enableOnePunch()
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        
-        -- Loop to instantly kill enemies with one punch
-        while _G.onePunch do
-            if character and character:FindFirstChild("HumanoidRootPart") then
-                local target = nil
-                for _, obj in pairs(workspace:GetChildren()) do
-                    if obj:IsA("Model") and obj:FindFirstChild("Humanoid") and obj.Humanoid.Health > 0 then
-                        -- Check if the object is an enemy
-                        if (obj.HumanoidRootPart.Position - character.HumanoidRootPart.Position).Magnitude < 10 then
-                            target = obj
-                            break
-                        end
-                    end
-                end
-                if target then
-                    target.Humanoid.Health = 0  -- Instantly kill the target
-                end
-            end
-            wait(0.1)  -- Delay to avoid performance issues
-        end
-    end
-
-    -- Function to enable Mop Auto Farm
-    function enableMopAutoFarm()
-        while _G.mopAutoFarm do
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-
-            -- Loop through Mop objects in the workspace
-            for _, mop in pairs(workspace:GetChildren()) do
-                if mop:IsA("Model") and mop:FindFirstChild("Humanoid") then
-                    local distance = (mop.Position - character.HumanoidRootPart.Position).Magnitude
-                    if distance < 10 then
-                        -- Mop interaction logic (this might need to be adjusted based on game mechanics)
-                        mop.Parent = character  -- Example of interaction with the Mop
-                    end
-                end
-            end
-            wait(0.5)  -- Delay to avoid performance issues
-        end
-    end
-
-    -- GUI Tab for Troll Features
-    local trollTab = Window:MakeTab({
-        Name = "Troll",
+    -- Add an "Auto" tab
+    local autoTab = Window:MakeTab({
+        Name = "Auto",
         Icon = "rbxassetid://4483345998",
         PremiumOnly = false
     })
 
-    -- Add Toggle for Kill All
-    trollTab:AddToggle({
-        Name = "Enable Kill All",
-        Default = false,
-        Callback = function(state)
-            _G.killall = state
-            if state then
-                killAll()
-            end
-        end
-    })
+    -- You can add features to the Auto tab here, for example:
+    -- autoTab:AddToggle({ Name = "Example Feature", Default = false, Callback = function(state) print(state) end })
 
-    -- Add Button for 75 WalkSpeed
-    trollTab:AddButton({
-        Name = "75 WalkSpeed",
-        Callback = function()
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 75
-        end
-    })
-
-    -- Add Button for Infinite Ammo (assuming the tool has an Ammo value)
-    trollTab:AddButton({
-        Name = "Infinite Ammo",
-        Callback = function()
-            local player = game.Players.LocalPlayer
-            if player.Character then
-                local tool = player.Character:FindFirstChildOfClass("Tool")
-                if tool and tool:FindFirstChild("Ammo") then
-                    tool.Ammo.Value = math.huge  -- Set ammo to infinite
-                else
-                    -- If no tool or Ammo value, show a notification
-                    OrionLib:MakeNotification({
-                        Name = "Error",
-                        Content = "No tool with Ammo equipped!",
-                        Image = "rbxassetid://4483345998",
-                        Time = 5
-                    })
-                end
-            end
-        end
-    })
-
-    -- Add Toggle for Auto Pickup
-    trollTab:AddToggle({
-        Name = "Enable Auto Pickup",
-        Default = false,
-        Callback = function(state)
-            _G.autoPickup = state
-            if state then
-                enableAutoPickup()  -- Activate Auto Pickup when toggled
-            end
-        end
-    })
-
-    -- Add Toggle for One Punch
-    trollTab:AddToggle({
-        Name = "Enable One Punch",
-        Default = false,
-        Callback = function(state)
-            _G.onePunch = state
-            if state then
-                enableOnePunch()  -- Activate One Punch when toggled
-            end
-        end
-    })
-
-    -- Add Toggle for Mop Auto Farm
-    trollTab:AddToggle({
-        Name = "Enable Mop Auto Farm",
-        Default = false,
-        Callback = function(state)
-            _G.mopAutoFarm = state
-            if state then
-                enableMopAutoFarm()  -- Activate Mop Auto Farm when toggled
-            end
-        end
-    })
-
-    -- GUI Tab for Teleports
-    local teleportTab = Window:MakeTab({
-        Name = "Teleports",
-        Icon = "rbxassetid://4483345998",
-        PremiumOnly = false
-    })
-
-    -- Add Button for Teleport to Spawn
-    teleportTab:AddButton({
-        Name = "Teleport to Spawn",
-        Callback = function()
-            local character = game.Players.LocalPlayer.Character
-            if character and character:FindFirstChild("HumanoidRootPart") then
-                -- Update the location for spawn teleport
-                character.HumanoidRootPart.CFrame = CFrame.new(0, 10, 0)  -- Modify this to the desired location
-            end
-        end
-    })
-
-    -- Add Button for Teleport to Shop
-    teleportTab:AddButton({
-        Name = "Teleport to Shop",
-        Callback = function()
-            local character = game.Players.LocalPlayer.Character
-            if character and character:FindFirstChild("HumanoidRootPart") then
-                -- Update the location for teleporting to the Shop
-                character.HumanoidRootPart.CFrame = CFrame.new(100, 10, 100)  -- Modify this to the desired location
-            end
-        end
-    })
-
-    -- Add Button for Teleport to Arena
-    teleportTab:AddButton({
-        Name = "Teleport to Arena",
-        Callback = function()
-            local character = game.Players.LocalPlayer.Character
-            if character and character:FindFirstChild("HumanoidRootPart") then
-                -- Update the location for teleporting to the Arena
-                character.HumanoidRootPart.CFrame = CFrame.new(200, 10, 200)  -- Modify this to the desired location
-            end
-        end
-    })
-
-    -- Initialize the OrionLib GUI
+    -- Initialize the Orion UI
     OrionLib:Init()
+else
+    warn("This script is not for this game.")
 end
