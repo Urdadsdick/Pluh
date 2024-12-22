@@ -20,46 +20,60 @@ if game.PlaceId == 3101667897 then
         PremiumOnly = false
     })
 
-    -- Variable to control Auto Farm for Red Orb in City
-    local autoFarmRedOrbEnabled = false
+    -- Variable to control Auto Farm for Blue Orb in City
+    local autoFarmBlueOrbEnabled = false
+    -- Variable to control Auto Rebirth
     local autoRebirthEnabled = false
+    -- Variable to control Auto Loop
+    local autoLoopEnabled = false
 
-    -- Function to start auto farming (collect Red Orb in City)
-    local function startAutoFarmRedOrb()
-        while autoFarmRedOrbEnabled do
+    -- Function to start auto farming Blue Orb in City
+    local function startAutoFarmBlueOrb()
+        while autoFarmBlueOrbEnabled do
             local success, err = pcall(function()
-                -- Fire the orb event to collect the Red Orb in City
-                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "City")
+                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", "City")
             end)
             if not success then
-                warn("Error while auto farming Red Orb in City:", err)
+                warn("Error while auto farming Blue Orb in City:", err)
             end
-            wait(0.000000000000000000001)  -- Extremely low wait time
+            wait(1)  -- Wait time for Auto Farm Blue Orb
         end
     end
 
-    -- Function to start auto rebirth
+    -- Function to start Auto Rebirth
     local function startAutoRebirth()
         while autoRebirthEnabled do
             local success, err = pcall(function()
-                -- Fire the rebirth event
                 replicatedStorage.rEvents.rebirthEvent:FireServer("rebirthRequest")
             end)
             if not success then
                 warn("Error while auto rebirthing:", err)
             end
-            wait(1)  -- Adjust the delay as needed
+            wait(1)  -- Wait time for Auto Rebirth
         end
     end
 
-    -- Add Auto Farm Toggle for Red Orb in City
+    -- Function to start the Auto Loop
+    local function startAutoLoop()
+        while autoLoopEnabled do
+            local success, err = pcall(function()
+                replicatedStorage.theHuntBadgeEvent:FireServer()
+            end)
+            if not success then
+                warn("Error while running Auto Loop:", err)
+            end
+            wait(0.000000000000000000000000000000000000000000000000000000000000000000000000000001)  -- Extremely low wait time
+        end
+    end
+
+    -- Add Auto Farm Toggle for Blue Orb in City
     autoTab:AddToggle({
-        Name = "Auto Farm Red Orb (City)",
+        Name = "Auto Farm Blue Orb (City)",
         Default = false,
         Callback = function(state)
-            autoFarmRedOrbEnabled = state
-            if autoFarmRedOrbEnabled then
-                spawn(startAutoFarmRedOrb)  -- Start the auto farming loop for Red Orb in City
+            autoFarmBlueOrbEnabled = state
+            if autoFarmBlueOrbEnabled then
+                spawn(startAutoFarmBlueOrb)  -- Start the auto farming loop for Blue Orb in City
             end
         end
     })
@@ -71,7 +85,19 @@ if game.PlaceId == 3101667897 then
         Callback = function(state)
             autoRebirthEnabled = state
             if autoRebirthEnabled then
-                spawn(startAutoRebirth)  -- Start the auto rebirth loop
+                spawn(startAutoRebirth)  -- Start the Auto Rebirth loop
+            end
+        end
+    })
+
+    -- Add Auto Loop Toggle for theHuntBadgeEvent
+    autoTab:AddToggle({
+        Name = "Auto Loop (theHuntBadgeEvent)",
+        Default = false,
+        Callback = function(state)
+            autoLoopEnabled = state
+            if autoLoopEnabled then
+                spawn(startAutoLoop)  -- Start the Auto Loop
             end
         end
     })
