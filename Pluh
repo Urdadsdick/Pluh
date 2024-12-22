@@ -20,19 +20,19 @@ if game.PlaceId == 3101667897 then
         PremiumOnly = false
     })
 
-    -- Variable to control Auto Farm for Blue Orb in City
-    local autoFarmBlueOrbEnabled = false
+    -- Variable to control Auto Farm for Red Orb in City
+    local autoFarmRedOrbEnabled = false
     local autoRebirthEnabled = false
 
-    -- Function to start auto farming (collect Blue Orb in City)
-    local function startAutoFarmBlueOrb()
-        while autoFarmBlueOrbEnabled do
+    -- Function to start auto farming (collect Red Orb in City)
+    local function startAutoFarmRedOrb()
+        while autoFarmRedOrbEnabled do
             local success, err = pcall(function()
-                -- Fire the orb event to collect the Blue Orb in City
-                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", "City")
+                -- Fire the orb event to collect the Red Orb in City
+                replicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", "City")
             end)
             if not success then
-                warn("Error while auto farming Blue Orb in City:", err)
+                warn("Error while auto farming Red Orb in City:", err)
             end
             wait(0.000000000000000000001)  -- Extremely low wait time
         end
@@ -52,14 +52,14 @@ if game.PlaceId == 3101667897 then
         end
     end
 
-    -- Add Auto Farm Toggle for Blue Orb in City
+    -- Add Auto Farm Toggle for Red Orb in City
     autoTab:AddToggle({
-        Name = "Auto Farm Blue Orb (City)",
+        Name = "Auto Farm Red Orb (City)",
         Default = false,
         Callback = function(state)
-            autoFarmBlueOrbEnabled = state
-            if autoFarmBlueOrbEnabled then
-                spawn(startAutoFarmBlueOrb)  -- Start the auto farming loop for Blue Orb in City
+            autoFarmRedOrbEnabled = state
+            if autoFarmRedOrbEnabled then
+                spawn(startAutoFarmRedOrb)  -- Start the auto farming loop for Red Orb in City
             end
         end
     })
